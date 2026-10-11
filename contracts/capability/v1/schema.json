@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aventics.local/contracts/capability/v1/schema.json",
+  "title": "Aventics Capability v1",
+  "type": "object",
+  "required": ["schemaVersion", "id", "name", "component", "safety", "interfaces"],
+  "additionalProperties": true,
+  "properties": {
+    "schemaVersion": { "const": "1" },
+    "id": { "type": "string", "pattern": "^[a-z0-9]+(\\.[a-z0-9-]+)+$" },
+    "name": { "type": "string", "minLength": 1 },
+    "component": { "type": "string", "pattern": "^aventics\\.[a-z0-9][a-z0-9.-]*$" },
+    "description": { "type": "string" },
+    "safety": { "enum": ["read", "preview", "write", "destructive"] },
+    "interfaces": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "enum": ["ui", "mcp", "cli", "automation"] }
+    }
+  }
+}

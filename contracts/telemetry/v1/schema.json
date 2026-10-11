@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aventics.local/contracts/telemetry/v1/schema.json",
+  "title": "Aventics Telemetry Event v1",
+  "type": "object",
+  "required": ["schemaVersion", "event", "timestamp", "component", "componentVersion", "result"],
+  "additionalProperties": true,
+  "properties": {
+    "schemaVersion": { "const": "1" },
+    "event": {
+      "enum": [
+        "component.started", "component.stopped",
+        "capability.started", "capability.completed", "capability.failed",
+        "skill.started", "skill.completed", "skill.failed",
+        "mcp.called", "mcp.failed", "update.installed"
+      ]
+    },
+    "timestamp": { "type": "string", "format": "date-time" },
+    "component": { "type": "string" },
+    "componentVersion": { "type": "string" },
+    "capability": { "type": ["string", "null"] },
+    "interface": { "enum": ["ui", "mcp", "cli", "automation", "agent", "system"] },
+    "durationMs": { "type": ["integer", "null"], "minimum": 0 },
+    "result": { "enum": ["success", "failure", "cancelled", "started"] },
+    "errorCode": { "type": ["string", "null"] }
+  }
+}
