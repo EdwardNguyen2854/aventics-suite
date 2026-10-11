@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aventics.local/contracts/health/v1/schema.json",
+  "title": "Aventics Component Health v1",
+  "type": "object",
+  "required": ["schemaVersion", "component", "version", "status"],
+  "additionalProperties": true,
+  "properties": {
+    "schemaVersion": { "const": "1" },
+    "component": { "type": "string" },
+    "version": { "type": "string" },
+    "status": { "enum": ["healthy", "degraded", "unavailable", "unknown"] },
+    "message": { "type": ["string", "null"] },
+    "checks": { "type": "array", "items": { "type": "object" } }
+  }
+}
