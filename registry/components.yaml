@@ -1,16 +1,17 @@
 schemaVersion: "1"
 
-# Suite-level registry data only. Component-owned metadata should come from
-# aventics.manifest.json once each component adopts the manifest contract.
+# Suite-level registry data only. Component-owned metadata comes from each
+# repository's aventics.manifest.json. Keep this file limited to Suite-level
+# lifecycle, channel, approval, and distribution metadata.
 components:
   - id: aventics.creo
     repository: EdwardNguyen2854/aventics-toolbox
     lifecycle: stable
     channel: stable
-    manifestStatus: pending
+    manifestStatus: adopted
 
   - id: aventics.excel
     repository: EdwardNguyen2854/excel-toolkit
     lifecycle: managed
     channel: development
-    manifestStatus: pending
+    manifestStatus: adopted
