@@ -1,0 +1,12 @@
+{
+  "discovery": {
+    "explicitComponents": [],
+    "managedRoots": ["C:\\aventics"],
+    "developmentRoots": ["C:\\local\\dev"],
+    "maxDepth": 4
+  },
+  "activity": {
+    "enabled": true,
+    "retentionDays": 90
+  }
+}

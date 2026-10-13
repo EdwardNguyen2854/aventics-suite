@@ -56,7 +56,7 @@ export class SuiteHostContext {
       if (component.health.status !== "healthy") items.push({ id: `health:${component.id}`, severity: "warning", source: "health", component: component.id, message: `Component health is ${component.health.status}`, details: component.health });
       if (!registry.entries.has(component.id)) items.push({ id: `registry-missing:${component.id}`, severity: "info", source: "registry", component: component.id, message: "Component is discovered but is not registered as an official Suite component" });
     }
-    this.diagnostics = { status: items.some((item) => item.severity === "error") ? "degraded" : "healthy", checkedAt: new Date().toISOString(), items };
+    this.diagnostics = { status: items.some((item) => item.severity === "error" || item.severity === "warning") ? "degraded" : "healthy", checkedAt: new Date().toISOString(), items };
     this.logger.info("Component rescan complete", { components: this.components.length, capabilities: this.capabilities.length, diagnostics: items.length });
   }
 }

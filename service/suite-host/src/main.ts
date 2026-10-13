@@ -7,7 +7,7 @@ import { JsonlActivityStore } from "./storage/jsonl-activity-store.js";
 import { ActivityService } from "./activity/activity-service.js";
 import { SuiteHostContext } from "./host-context.js";
 import { buildServer } from "./api/server.js";
-import { acquireSingleInstance, releaseSingleInstance, type SingleInstanceLease } from "./runtime/single-instance.js";
+import { acquireSingleInstance, releaseSingleInstance } from "./runtime/single-instance.js";
 import { writeRendezvous } from "./runtime/rendezvous.js";
 
 const VERSION = "0.1.0";
@@ -35,7 +35,8 @@ async function main(): Promise<void> {
   try {
     const suiteRoot = await findSuiteRoot();
     const validator = await ContractValidator.create(suiteRoot);
-    const activity = new ActivityService(validator, new JsonlActivityStore(config.dataRoot), config.activity.enabled);
+    const activityStore = new JsonlActivityStore(config.dataRoot, config.activity.retentionDays);
+    const activity = new ActivityService(validator, activityStore, config.activity.enabled);
     const context = new SuiteHostContext(VERSION, config, suiteRoot, validator, activity, logger);
     await context.rescan();
 

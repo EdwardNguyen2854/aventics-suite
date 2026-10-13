@@ -45,22 +45,28 @@ export async function loadConfig(): Promise<HostConfig> {
   const configPath = path.join(dataRoot, "config", "host.json");
   let raw: Record<string, unknown> = {};
   try {
-    raw = JSON.parse(await readFile(configPath, "utf8")) as Record<string, unknown>;
+    const text = await readFile(configPath, "utf8");
+    try {
+      raw = JSON.parse(text) as Record<string, unknown>;
+    } catch (error) {
+      process.stderr.write(`[suite-host] Ignoring invalid config ${configPath}: ${String(error)}\n`);
+    }
   } catch (error) {
-    const code = (error as NodeJS.ErrnoException).code;
-    if (code !== "ENOENT") throw new Error(`Invalid Suite Host config at ${configPath}: ${String(error)}`);
+    if ((error as NodeJS.ErrnoException).code !== "ENOENT") throw new Error(`Unable to read Suite Host config at ${configPath}: ${String(error)}`);
   }
 
   const discovery = (raw.discovery && typeof raw.discovery === "object" ? raw.discovery : {}) as Record<string, unknown>;
   const activity = (raw.activity && typeof raw.activity === "object" ? raw.activity : {}) as Record<string, unknown>;
   const maxDepth = typeof discovery.maxDepth === "number" ? Math.max(0, Math.min(8, Math.floor(discovery.maxDepth))) : defaults.discovery.maxDepth;
+  const configuredManaged = normalizePaths(discovery.managedRoots);
+  const configuredDevelopment = normalizePaths(discovery.developmentRoots);
 
   return {
     dataRoot,
     discovery: {
-      explicitComponents: [...normalizePaths(discovery.explicitComponents), ...envRoots("AVENTICS_COMPONENT_PATHS")],
-      managedRoots: [...normalizePaths(discovery.managedRoots).length ? normalizePaths(discovery.managedRoots) : defaults.discovery.managedRoots, ...envRoots("AVENTICS_COMPONENT_ROOTS")],
-      developmentRoots: [...normalizePaths(discovery.developmentRoots).length ? normalizePaths(discovery.developmentRoots) : defaults.discovery.developmentRoots, ...envRoots("AVENTICS_DEVELOPMENT_ROOTS")],
+      explicitComponents: [...new Set([...normalizePaths(discovery.explicitComponents), ...envRoots("AVENTICS_COMPONENT_PATHS")])],
+      managedRoots: [...new Set([...(configuredManaged.length > 0 ? configuredManaged : defaults.discovery.managedRoots), ...envRoots("AVENTICS_COMPONENT_ROOTS")])],
+      developmentRoots: [...new Set([...(configuredDevelopment.length > 0 ? configuredDevelopment : defaults.discovery.developmentRoots), ...envRoots("AVENTICS_DEVELOPMENT_ROOTS")])],
       maxDepth
     },
     activity: {

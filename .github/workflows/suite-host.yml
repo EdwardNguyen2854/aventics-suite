@@ -1,0 +1,29 @@
+name: Suite Host
+
+on:
+  push:
+    paths:
+      - "service/suite-host/**"
+      - "contracts/**"
+      - "registry/components.yaml"
+      - ".github/workflows/suite-host.yml"
+  pull_request:
+    paths:
+      - "service/suite-host/**"
+      - "contracts/**"
+      - "registry/components.yaml"
+      - ".github/workflows/suite-host.yml"
+
+jobs:
+  test:
+    runs-on: windows-latest
+    defaults:
+      run:
+        working-directory: service/suite-host
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm install --no-audit --no-fund
+      - run: npm test
