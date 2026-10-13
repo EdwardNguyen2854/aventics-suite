@@ -23,6 +23,7 @@ on:
 jobs:
   build-and-package:
     runs-on: windows-latest
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-node@v7
@@ -47,12 +48,18 @@ jobs:
         working-directory: apps/desktop
         shell: pwsh
         run: |
-          $process = Start-Process -FilePath ".\release\win-unpacked\Aventics Suite.exe" -ArgumentList "--smoke-test" -Wait -PassThru
+          $process = Start-Process -FilePath ".\release\win-unpacked\Aventics Suite.exe" -ArgumentList "--smoke-test" -PassThru
+          if (-not $process.WaitForExit(30000)) {
+            $process.Kill()
+            throw "Packaged Aventics Suite smoke test timed out after 30 seconds"
+          }
           if ($process.ExitCode -ne 0) { throw "Packaged Aventics Suite smoke test failed with exit code $($process.ExitCode)" }
       - name: Upload Suite installer
         uses: actions/upload-artifact@v7
         with:
           name: Aventics-Suite-1.0.0-Windows
-          path: apps/desktop/release/Aventics-Suite-1.0.0-Setup.exe
+          path: |
+            apps/desktop/release/Aventics-Suite-1.0.0-Setup.exe
+            apps/desktop/release/latest.yml
           if-no-files-found: error
           retention-days: 30
