@@ -8,7 +8,7 @@ import { ensureHost, requestHost, stopOwnedHost, suiteRoot } from "./host-manage
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 let mainWindow: BrowserWindow | null = null;
 const initialMode = process.argv.includes("--developer") ? "developer" : "user";
-const smokeTest = process.argv.includes("--smoke-test");
+const smokeTest = process.env.AVENTICS_SUITE_SMOKE_TEST === "1" || process.argv.includes("--smoke-test");
 
 async function createWindow(): Promise<void> {
   await ensureHost();
@@ -18,12 +18,13 @@ async function createWindow(): Promise<void> {
 }
 
 async function runSmokeTest(): Promise<void> {
-  await ensureHost();
+  const info = await ensureHost();
   const status = await requestHost("/api/v1/status") as { service?: string; version?: string };
   if (status.service !== "aventics-suite-host" || status.version !== "1.0.0") throw new Error(`Unexpected Suite Host status: ${JSON.stringify(status)}`);
   await requestHost("/api/v1/components");
   await requestHost("/api/v1/capabilities");
   await requestHost("/api/v1/diagnostics");
+  console.log(`Aventics Suite packaged smoke test passed using Suite Host ${info.host}:${info.port}`);
   stopOwnedHost();
 }
 

@@ -48,11 +48,18 @@ jobs:
         working-directory: apps/desktop
         shell: pwsh
         run: |
-          $process = Start-Process -FilePath ".\release\win-unpacked\Aventics Suite.exe" -ArgumentList "--smoke-test" -PassThru
+          $env:AVENTICS_SUITE_SMOKE_TEST = "1"
+          $stdout = Join-Path $env:RUNNER_TEMP "aventics-suite-smoke-out.log"
+          $stderr = Join-Path $env:RUNNER_TEMP "aventics-suite-smoke-err.log"
+          $process = Start-Process -FilePath ".\release\win-unpacked\Aventics Suite.exe" -PassThru -RedirectStandardOutput $stdout -RedirectStandardError $stderr
           if (-not $process.WaitForExit(30000)) {
             $process.Kill()
+            Get-Content $stdout -ErrorAction SilentlyContinue
+            Get-Content $stderr -ErrorAction SilentlyContinue
             throw "Packaged Aventics Suite smoke test timed out after 30 seconds"
           }
+          Get-Content $stdout -ErrorAction SilentlyContinue
+          Get-Content $stderr -ErrorAction SilentlyContinue
           if ($process.ExitCode -ne 0) { throw "Packaged Aventics Suite smoke test failed with exit code $($process.ExitCode)" }
       - name: Upload Suite installer
         uses: actions/upload-artifact@v7
