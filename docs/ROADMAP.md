@@ -1,63 +1,43 @@
-# Roadmap
+# Aventics Suite Roadmap
 
-## Phase 0 — Architecture
+## 1.0 — Stable product baseline
 
-- define architecture principles
-- define component and capability models
-- define ADR process
-- define initial manifest and telemetry contracts
+Aventics Suite 1.0 establishes the production architecture and first complete local product experience:
 
-## Phase 1 — Foundation
+- contract-first component integration;
+- Suite Host local control plane;
+- engineer-facing desktop workspace;
+- separate Developer experience over the same Host;
+- component/capability discovery;
+- Windows runtime state and health;
+- local activity/privacy controls;
+- offline documentation;
+- Skills and MCP provider discovery;
+- diagnostics, logs, validation and CLI tooling;
+- release compatibility and per-user Windows installer;
+- Creo Toolkit, Excel Toolkit and Knowledge Base as three deliberately different reference architectures.
 
-- validate contracts against Creo Toolkit and Excel Toolkit
-- add component manifests to real components
-- create App Development Skill
-- create initial Suite registry
-- establish documentation conventions
+Migration tooling remains intentionally dormant until the first real breaking contract change exists. A migration framework without a real migration target would create policy and complexity without evidence.
 
-## Phase 2 — Suite Host
+## Post-1.0 priorities
 
-- component discovery
-- manifest loading
-- capability catalog
-- health checks
-- local telemetry
-- docs discovery
+### 1.1 — Daily-use refinement
 
-## Phase 3 — User GUI
+- collect engineer feedback from Stable deployment;
+- improve component launch integration only where components provide safe launch metadata;
+- add richer runtime health providers where useful;
+- improve global search and favorites from real usage patterns;
+- expand capability descriptions as interfaces mature.
 
-Initial pages: Home, Apps, Tools, Activity, Docs, Settings.
+### 1.x — Agent workflows
 
-## Phase 4 — Developer GUI
+- prove additional preview-first CAD/Excel agent workflows;
+- grow Skills based on real engineering tasks;
+- add an optional MCP gateway only if multiple-provider routing becomes a real usability problem.
 
-Initial pages: Components, Capabilities, Health, Telemetry, Logs, Skills, Validation.
+### Later, evidence-driven only
 
-The first Developer GUI should be observational, not a cross-repo mutation tool.
-
-## Phase 5 — Developer workflow
-
-- validation tooling
-- app/Skill/MCP templates where justified
-- additional development Skills
-
-## Phase 6 — MCP integration
-
-- provider discovery
-- capability association
-- safety metadata
-- usage tracking
-
-## Phase 7 — Release management
-
-- Suite release manifests
-- compatibility matrix
-- Development / Pilot / Stable channels
-- selective integration tests
-
-## Phase 8 — Migration tooling
-
-Only after a real breaking contract change exists: detect, preview, validate, and then optionally apply migrations.
-
-## Phase 9 — Advanced management
-
-Only when justified: central updater, repo automation, PR generation, team telemetry aggregation, and workflow orchestration.
+- migration tooling after a real breaking contract exists;
+- team-level telemetry only with explicit privacy/governance requirements;
+- cross-repo automation only after preview/review workflows are proven;
+- central updater only where replacing component-owned update mechanisms creates measurable value.

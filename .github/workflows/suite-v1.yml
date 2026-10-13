@@ -40,6 +40,15 @@ jobs:
       - name: Build desktop
         working-directory: apps/desktop
         run: npm run build
-      - name: Validate Windows package
+      - name: Build Windows installer
         working-directory: apps/desktop
-        run: npm run pack
+        run: npm run dist
+      - name: Upload Suite installer
+        uses: actions/upload-artifact@v7
+        with:
+          name: Aventics-Suite-1.0.0-Windows
+          path: |
+            apps/desktop/release/Aventics-Suite-1.0.0-Setup.exe
+            apps/desktop/release/latest.yml
+          if-no-files-found: error
+          retention-days: 30

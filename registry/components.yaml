@@ -23,4 +23,4 @@ components:
     repository: EdwardNguyen2854/local-rag
     lifecycle: managed
     channel: stable
-    manifestStatus: candidate
+    manifestStatus: adopted
