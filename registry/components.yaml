@@ -1,17 +1,20 @@
 schemaVersion: "1"
 
 # Suite-level registry data only. Component-owned metadata comes from each
-# repository's aventics.manifest.json. Keep this file limited to Suite-level
-# lifecycle, channel, approval, and distribution metadata.
+# repository's aventics.manifest.json.
 components:
   - id: aventics.creo
     repository: EdwardNguyen2854/aventics-toolbox
     lifecycle: stable
     channel: stable
     manifestStatus: adopted
+    runtime:
+      processNames: ["parametric.exe"]
 
   - id: aventics.excel
     repository: EdwardNguyen2854/excel-toolkit
     lifecycle: managed
-    channel: development
+    channel: stable
     manifestStatus: adopted
+    runtime:
+      processNames: ["EXCEL.EXE"]

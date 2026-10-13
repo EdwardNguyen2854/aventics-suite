@@ -1,0 +1,8 @@
+{
+  "schemaVersion": "1",
+  "id": "aventics.skill.app-development",
+  "name": "Aventics App Development",
+  "description": "Guide for creating Suite-compatible engineering components while preserving implementation freedom.",
+  "requires": [],
+  "optional": []
+}

@@ -1,0 +1,9 @@
+{
+  "suiteVersion": "1.0.0",
+  "channel": "stable",
+  "releasedAt": "2026-10-14",
+  "components": {
+    "aventics.creo": "0.6.0",
+    "aventics.excel": "1.0.0"
+  }
+}

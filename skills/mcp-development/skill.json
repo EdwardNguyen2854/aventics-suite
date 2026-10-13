@@ -1,0 +1,8 @@
+{
+  "schemaVersion": "1",
+  "id": "aventics.skill.mcp-development",
+  "name": "Aventics MCP Development",
+  "description": "Guide for exposing stable Aventics capabilities through component-owned MCP providers.",
+  "requires": [],
+  "optional": []
+}

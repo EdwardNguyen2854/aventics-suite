@@ -1,0 +1,8 @@
+{
+  "schemaVersion": "1",
+  "id": "aventics.skill.suite-development",
+  "name": "Aventics Suite Development",
+  "description": "Guide for developing the Suite control plane, desktop experience, contracts, and governance.",
+  "requires": [],
+  "optional": []
+}

@@ -11,4 +11,6 @@ export interface ActivityStore {
   append(event: StoredTelemetryEvent): Promise<void>;
   recent(limit: number): Promise<StoredTelemetryEvent[]>;
   summary(): Promise<ActivitySummary>;
+  clear(): Promise<void>;
+  setRetentionDays?(days: number): void;
 }

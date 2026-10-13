@@ -1,0 +1,8 @@
+{
+  "schemaVersion": "1",
+  "id": "aventics.skill.skill-development",
+  "name": "Aventics Skill Development",
+  "description": "Guide for writing Skills that depend on stable capabilities rather than implementation details.",
+  "requires": [],
+  "optional": []
+}

@@ -1,0 +1,14 @@
+schemaVersion: "1"
+providers:
+  - id: aventics.creo.mcp
+    name: Creo MCP
+    component: aventics.creo
+    transport: http
+    probePath: /health
+    capabilityIds: []
+  - id: aventics.excel.mcp
+    name: Excel MCP
+    component: aventics.excel
+    transport: http
+    probePath: /health
+    capabilityIds: []
