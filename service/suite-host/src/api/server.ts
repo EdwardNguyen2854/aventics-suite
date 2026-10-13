@@ -13,7 +13,7 @@ export function buildServer(context: SuiteHostContext, token: string): FastifyIn
   app.get("/api/v1/capabilities/:id", async (request, reply) => { const { id } = request.params as { id: string }; return context.capabilities.find((item) => item.id === id) ?? reply.code(404).send(apiError("CAPABILITY_NOT_FOUND", `Capability not found: ${id}`)); });
   app.get("/api/v1/skills", async () => context.skills);
   app.get("/api/v1/mcp", async () => context.mcpProviders);
-  app.get("/api/v1/release", async () => context.release ?? replyUnavailable(reply, "RELEASE_UNAVAILABLE", "Suite release metadata unavailable"));
+  app.get("/api/v1/release", async (_request, reply) => context.release ?? reply.code(503).send(apiError("RELEASE_UNAVAILABLE", "Suite release metadata unavailable")));
   app.get("/api/v1/health", async () => context.components.map((component) => ({ component: component.id, runtime: component.runtime, ...component.health })));
   app.get("/api/v1/health/:componentId", async (request, reply) => { const { componentId } = request.params as { componentId: string }; const component = context.components.find((item) => item.id === componentId); return component ? { component: component.id, runtime: component.runtime, ...component.health } : reply.code(404).send(apiError("COMPONENT_NOT_FOUND", `Component not found: ${componentId}`)); });
   app.get("/api/v1/docs", async () => context.components.map((component) => ({ component: component.id, ...component.docs })));
@@ -34,4 +34,3 @@ export function buildServer(context: SuiteHostContext, token: string): FastifyIn
   return app;
 }
 function apiError(code: string, message: string, details?: unknown) { return { error: { code, message, ...(details === undefined ? {} : { details }) } }; }
-function replyUnavailable(reply: { code: (status: number) => { send: (payload: unknown) => unknown } }, code: string, message: string) { return reply.code(503).send(apiError(code, message)); }
