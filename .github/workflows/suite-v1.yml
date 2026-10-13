@@ -47,8 +47,6 @@ jobs:
         uses: actions/upload-artifact@v7
         with:
           name: Aventics-Suite-1.0.0-Windows
-          path: |
-            apps/desktop/release/Aventics-Suite-1.0.0-Setup.exe
-            apps/desktop/release/latest.yml
+          path: apps/desktop/release/Aventics-Suite-1.0.0-Setup.exe
           if-no-files-found: error
           retention-days: 30

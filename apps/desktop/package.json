@@ -2,6 +2,8 @@
   "name": "@aventics/suite-desktop",
   "productName": "Aventics Suite",
   "version": "1.0.0",
+  "description": "Local-first engineering workspace and control plane for Aventics engineering software.",
+  "author": "Aventics Engineering",
   "private": true,
   "type": "module",
   "main": "dist-electron/main.js",
@@ -11,8 +13,8 @@
     "dev": "npm run host && npm run build && electron .",
     "start": "npm run dev",
     "check": "npm run build",
-    "dist": "npm run host && npm run build && electron-builder --win nsis",
-    "pack": "npm run host && npm run build && electron-builder --win dir"
+    "dist": "npm run host && npm run build && electron-builder --win nsis --publish never",
+    "pack": "npm run host && npm run build && electron-builder --win dir --publish never"
   },
   "dependencies": {
     "electron-updater": "^6.6.2",
@@ -44,7 +46,7 @@
       { "from": "../../skills", "to": "suite/skills" },
       { "from": "../../docs", "to": "suite/docs" }
     ],
-    "win": { "target": "nsis", "icon": "build/icon.ico" },
+    "win": { "target": "nsis", "icon": "build/icon.svg" },
     "nsis": {
       "oneClick": false,
       "perMachine": false,
