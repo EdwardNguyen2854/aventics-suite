@@ -43,6 +43,12 @@ jobs:
       - name: Build Windows installer
         working-directory: apps/desktop
         run: npm run dist
+      - name: Smoke-test packaged desktop and bundled Host
+        working-directory: apps/desktop
+        shell: pwsh
+        run: |
+          $process = Start-Process -FilePath ".\release\win-unpacked\Aventics Suite.exe" -ArgumentList "--smoke-test" -Wait -PassThru
+          if ($process.ExitCode -ne 0) { throw "Packaged Aventics Suite smoke test failed with exit code $($process.ExitCode)" }
       - name: Upload Suite installer
         uses: actions/upload-artifact@v7
         with:

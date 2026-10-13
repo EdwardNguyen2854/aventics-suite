@@ -14,6 +14,7 @@ This checklist is the release gate for the first Stable Suite release.
 - [x] Desktop TypeScript/Vite/Electron build is validated on Windows.
 - [x] Electron production package is generated on Windows.
 - [x] NSIS installer is generated on Windows.
+- [x] Packaged desktop starts its bundled Host and completes API smoke checks.
 - [x] Installer artifact is retained by CI.
 
 ## Architecture gates

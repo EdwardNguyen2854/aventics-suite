@@ -8,12 +8,23 @@ import { ensureHost, requestHost, stopOwnedHost, suiteRoot } from "./host-manage
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 let mainWindow: BrowserWindow | null = null;
 const initialMode = process.argv.includes("--developer") ? "developer" : "user";
+const smokeTest = process.argv.includes("--smoke-test");
 
 async function createWindow(): Promise<void> {
   await ensureHost();
   mainWindow = new BrowserWindow({ width: 1440, height: 920, minWidth: 1080, minHeight: 700, show: false, backgroundColor: "#f5f7f9", webPreferences: { preload: path.join(__dirname, "preload.js"), contextIsolation: true, nodeIntegration: false, sandbox: true } });
   mainWindow.once("ready-to-show", () => mainWindow?.show());
   await mainWindow.loadFile(path.join(__dirname, "../dist/index.html"), { query: { mode: initialMode } });
+}
+
+async function runSmokeTest(): Promise<void> {
+  await ensureHost();
+  const status = await requestHost("/api/v1/status") as { service?: string; version?: string };
+  if (status.service !== "aventics-suite-host" || status.version !== "1.0.0") throw new Error(`Unexpected Suite Host status: ${JSON.stringify(status)}`);
+  await requestHost("/api/v1/components");
+  await requestHost("/api/v1/capabilities");
+  await requestHost("/api/v1/diagnostics");
+  stopOwnedHost();
 }
 
 ipcMain.handle("suite:request", async (_event, input: { path: string; method?: string; body?: unknown }) => requestHost(input.path, input.method ?? "GET", input.body));
@@ -23,7 +34,14 @@ ipcMain.handle("suite:version", () => app.getVersion());
 ipcMain.handle("suite:mode", () => initialMode);
 ipcMain.handle("suite:updateCheck", async () => { const url = process.env.AVENTICS_SUITE_UPDATE_URL; if (!url) return { enabled: false, status: "not-configured" }; autoUpdater.autoDownload = false; autoUpdater.setFeedURL({ provider: "generic", url }); const result = await autoUpdater.checkForUpdates(); return { enabled: true, status: result?.updateInfo?.version && result.updateInfo.version !== app.getVersion() ? "available" : "current", currentVersion: app.getVersion(), availableVersion: result?.updateInfo?.version ?? null }; });
 
-app.whenReady().then(createWindow).catch((error) => { console.error(error); app.quit(); });
-app.on("window-all-closed", () => { if (process.platform !== "darwin") app.quit(); });
+app.whenReady().then(async () => {
+  if (smokeTest) {
+    try { await runSmokeTest(); app.exit(0); }
+    catch (error) { console.error("Aventics Suite packaged smoke test failed:", error); stopOwnedHost(); app.exit(1); }
+    return;
+  }
+  await createWindow();
+}).catch((error) => { console.error(error); app.exit(1); });
+app.on("window-all-closed", () => { if (!smokeTest && process.platform !== "darwin") app.quit(); });
 app.on("before-quit", () => stopOwnedHost());
-app.on("activate", () => { if (BrowserWindow.getAllWindows().length === 0) void createWindow(); });
+app.on("activate", () => { if (!smokeTest && BrowserWindow.getAllWindows().length === 0) void createWindow(); });
