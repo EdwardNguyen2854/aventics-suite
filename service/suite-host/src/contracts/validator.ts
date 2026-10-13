@@ -1,12 +1,10 @@
 import path from "node:path";
 import { readFile } from "node:fs/promises";
-import { createRequire } from "node:module";
 import type { ErrorObject, ValidateFunction } from "ajv";
 import type { AventicsManifest, TelemetryEvent } from "../domain/types.js";
 
-const require = createRequire(import.meta.url);
-const Ajv2020 = require("ajv/dist/2020") as new (options?: Record<string, unknown>) => { compile(schema: unknown): ValidateFunction };
-const addFormats = require("ajv-formats") as (ajv: unknown) => unknown;
+interface AjvLike { compile(schema: unknown): ValidateFunction; }
+type AjvConstructor = new (options?: Record<string, unknown>) => AjvLike;
 
 export interface ValidationResult<T> {
   valid: boolean;
@@ -21,6 +19,10 @@ export class ContractValidator {
   ) {}
 
   static async create(suiteRoot: string): Promise<ContractValidator> {
+    const ajvModule = await import("ajv/dist/2020.js");
+    const formatsModule = await import("ajv-formats");
+    const Ajv2020 = ajvModule.default as unknown as AjvConstructor;
+    const addFormats = formatsModule.default as unknown as (ajv: AjvLike) => unknown;
     const ajv = new Ajv2020({ allErrors: true, strict: false });
     addFormats(ajv);
     const [manifestSchema, telemetrySchema] = await Promise.all([

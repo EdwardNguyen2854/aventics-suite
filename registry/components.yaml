@@ -18,3 +18,9 @@ components:
     manifestStatus: adopted
     runtime:
       processNames: ["EXCEL.EXE"]
+
+  - id: aventics.knowledge-base
+    repository: EdwardNguyen2854/local-rag
+    lifecycle: managed
+    channel: stable
+    manifestStatus: candidate

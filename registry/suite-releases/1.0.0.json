@@ -4,6 +4,7 @@
   "releasedAt": "2026-10-14",
   "components": {
     "aventics.creo": "0.6.0",
-    "aventics.excel": "1.0.0"
+    "aventics.excel": "1.0.0",
+    "aventics.knowledge-base": "0.1.1"
   }
 }
