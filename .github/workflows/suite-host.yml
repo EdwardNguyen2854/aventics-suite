@@ -5,13 +5,15 @@ on:
     paths:
       - "service/suite-host/**"
       - "contracts/**"
-      - "registry/components.yaml"
+      - "registry/**"
+      - "skills/**"
       - ".github/workflows/suite-host.yml"
   pull_request:
     paths:
       - "service/suite-host/**"
       - "contracts/**"
-      - "registry/components.yaml"
+      - "registry/**"
+      - "skills/**"
       - ".github/workflows/suite-host.yml"
 
 jobs:
@@ -27,4 +29,4 @@ jobs:
           node-version: 22
           package-manager-cache: false
       - run: npm install --no-audit --no-fund
-      - run: npm test
+      - run: npm run check

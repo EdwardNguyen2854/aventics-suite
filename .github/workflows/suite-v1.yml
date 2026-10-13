@@ -1,0 +1,45 @@
+name: Aventics Suite v1
+
+on:
+  push:
+    paths:
+      - "apps/desktop/**"
+      - "service/suite-host/**"
+      - "contracts/**"
+      - "registry/**"
+      - "skills/**"
+      - "docs/**"
+      - ".github/workflows/suite-v1.yml"
+  pull_request:
+    paths:
+      - "apps/desktop/**"
+      - "service/suite-host/**"
+      - "contracts/**"
+      - "registry/**"
+      - "skills/**"
+      - "docs/**"
+      - ".github/workflows/suite-v1.yml"
+
+jobs:
+  build-and-package:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          package-manager-cache: false
+      - name: Install and test Suite Host
+        working-directory: service/suite-host
+        run: |
+          npm install --no-audit --no-fund
+          npm run check
+      - name: Install desktop dependencies
+        working-directory: apps/desktop
+        run: npm install --no-audit --no-fund
+      - name: Build desktop
+        working-directory: apps/desktop
+        run: npm run build
+      - name: Validate Windows package
+        working-directory: apps/desktop
+        run: npm run pack

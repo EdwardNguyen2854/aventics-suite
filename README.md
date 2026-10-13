@@ -1,38 +1,60 @@
 # Aventics Suite
 
-Aventics Suite is the product, control plane, development standard, documentation system, and integration layer for Aventics engineering software and AI capabilities.
+Aventics Suite is the local-first engineering workspace, control plane, documentation system, developer platform, and AI integration boundary for Aventics engineering software.
 
 > **Core principle:** standardize boundaries, not implementations.
 
-Individual components remain independently buildable and usable. The Suite coordinates discovery, capabilities, documentation, telemetry, health, compatibility, Skills, and cross-component development without forcing a single language, framework, runtime, or internal architecture.
+## v1.0
 
-## Product model
+Aventics Suite 1.0 provides one desktop product with two distinct experiences:
 
-- **Extensions** — Creo Toolkit, Excel Toolkit, and future host-integrated applications.
-- **Apps** — standalone engineering applications such as knowledge, QC, and visualization tools.
-- **AI** — MCP interfaces, Skills, agents, and workflows.
-- **Platform** — discovery, capability registry, telemetry, diagnostics, documentation, and release coordination.
-- **Development Platform** — contracts, guidelines, Skills, templates, validation, and migration support.
+- **Aventics Suite** — engineer-facing Home, Apps, Tools, AI, Activity, Updates, Docs, Settings, and About.
+- **Aventics Developer** — Components, Capabilities, Health, Logs, Skills, MCP, Validation, Releases, Diagnostics, and developer documentation.
 
-## Architecture principles
+Both are backed by the same local **Suite Host**. Managed components remain independently buildable and usable when Suite is unavailable.
 
-1. Suite standardizes boundaries, not implementations.
-2. Components remain independently buildable and usable.
-3. Suite infrastructure must not become an unnecessary runtime dependency.
-4. Contracts are small, explicit, versioned, and backward-compatible where practical.
-5. Guidelines are flexible recommendations, not APIs.
-6. Templates accelerate development but do not define architecture.
-7. Shared libraries are created only after proven reuse.
-8. Capabilities are the stable abstraction; UI, MCP, CLI, and automation are interfaces.
-9. Skills depend on capabilities rather than implementation details.
-10. Telemetry is metadata-only and best-effort by default.
-11. Experimental development has a low entry barrier.
-12. Breaking changes require a migration path and transition period.
-13. User and developer experiences are separate views of the same platform.
-14. Compatibility matters more than perfect conformity.
-15. Preview-first is preferred for automated engineering changes.
-16. This repository owns cross-component architecture and governance; component repositories own implementations.
+## Architecture
+
+```text
+User UI ───────┐
+               ├── Suite Host ── discovery / catalog / health / activity / docs
+Developer UI ──┘                    │
+                                    ├── Creo Toolkit
+                                    ├── Excel Toolkit
+                                    └── future apps and providers
+```
+
+Suite Host binds only to loopback, uses an ephemeral bearer token, works offline, and never executes arbitrary component code during discovery.
+
+## Development quick start
+
+```powershell
+# Host
+cd service\suite-host
+npm install
+npm test
+
+# Desktop
+cd ..\..\apps\desktop
+npm install
+npm run dev
+```
+
+Development mode scans `C:\local\dev` for nearby `aventics.manifest.json` files. Production discovery remains explicit and managed-root based.
+
+## Product contracts
+
+- `contracts/manifest/v1` — component identity and integration boundary
+- `contracts/capability/v1` — stable capability metadata and safety
+- `contracts/telemetry/v1` — metadata-only activity events
+- `contracts/health/v1` — health/status boundary
+
+Contracts are versioned for compatibility. Guidelines are living recommendations. Shared packages are created only after proven reuse.
+
+## Privacy
+
+Suite telemetry is local by default and intentionally excludes customer names, project names, filenames, CAD model names, workbook content, prompts, conversations, drawing data, and engineering values. Users can disable or clear local activity history.
 
 ## Status
 
-The repository is in the foundation phase. Runtime GUIs and Suite Host will be added only after the contracts and component model have been validated against real components such as Creo Toolkit and Excel Toolkit.
+`feature/v1.0` contains the complete 1.0 implementation candidate. Stable release promotion happens only after Windows/no-admin/offline packaging and integration checks are green.
