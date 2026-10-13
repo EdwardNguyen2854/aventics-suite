@@ -1,0 +1,56 @@
+{
+  "name": "@aventics/suite-desktop",
+  "productName": "Aventics Suite",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "main": "dist-electron/main.js",
+  "scripts": {
+    "host": "cd ../../service/suite-host && npm run build && npm run bundle",
+    "build": "tsc -b && vite build && tsc -p electron/tsconfig.json",
+    "dev": "npm run host && npm run build && electron .",
+    "start": "npm run dev",
+    "check": "npm run build",
+    "dist": "npm run host && npm run build && electron-builder --win nsis",
+    "pack": "npm run host && npm run build && electron-builder --win dir"
+  },
+  "dependencies": {
+    "electron-updater": "^6.6.2",
+    "lucide-react": "^0.468.0",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "react-markdown": "^10.1.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "@vitejs/plugin-react": "^4.4.1",
+    "electron": "^38.0.0",
+    "electron-builder": "^26.0.12",
+    "typescript": "^5.9.2",
+    "vite": "^6.1.0"
+  },
+  "build": {
+    "appId": "com.aventics.suite",
+    "productName": "Aventics Suite",
+    "asar": true,
+    "directories": { "output": "release" },
+    "files": ["dist/**/*", "dist-electron/**/*", "package.json"],
+    "extraResources": [
+      { "from": "../../service/suite-host/bundle/suite-host.cjs", "to": "host/suite-host.cjs" },
+      { "from": "../../contracts", "to": "suite/contracts" },
+      { "from": "../../registry", "to": "suite/registry" },
+      { "from": "../../skills", "to": "suite/skills" },
+      { "from": "../../docs", "to": "suite/docs" }
+    ],
+    "win": { "target": "nsis" },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true
+    }
+  }
+}
