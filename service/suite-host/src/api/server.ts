@@ -75,8 +75,9 @@ export function buildServer(context: SuiteHostContext, token: string): FastifyIn
   });
 
   app.setNotFoundHandler(async (_request, reply) => reply.code(404).send(apiError("NOT_FOUND", "Endpoint not found")));
-  app.setErrorHandler(async (error, _request, reply) => {
-    context.logger.error("Unhandled API error", { message: error.message });
+  app.setErrorHandler(async (error: unknown, _request, reply) => {
+    const message = error instanceof Error ? error.message : String(error);
+    context.logger.error("Unhandled API error", { message });
     return reply.code(500).send(apiError("INTERNAL_ERROR", "Internal Suite Host error"));
   });
   return app;

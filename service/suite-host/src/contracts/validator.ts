@@ -1,9 +1,12 @@
 import path from "node:path";
 import { readFile } from "node:fs/promises";
-import Ajv2020 from "ajv/dist/2020.js";
-import addFormats from "ajv-formats";
+import { createRequire } from "node:module";
 import type { ErrorObject, ValidateFunction } from "ajv";
 import type { AventicsManifest, TelemetryEvent } from "../domain/types.js";
+
+const require = createRequire(import.meta.url);
+const Ajv2020 = require("ajv/dist/2020") as new (options?: Record<string, unknown>) => { compile(schema: unknown): ValidateFunction };
+const addFormats = require("ajv-formats") as (ajv: unknown) => unknown;
 
 export interface ValidationResult<T> {
   valid: boolean;

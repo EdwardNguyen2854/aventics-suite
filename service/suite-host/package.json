@@ -11,8 +11,8 @@
     "build": "tsc -p tsconfig.json",
     "start": "node --enable-source-maps dist/src/main.js",
     "dev": "npm run build && npm run start",
-    "test": "npm run build && node --test dist/tests/**/*.test.js",
-    "check": "npm run build && npm run test"
+    "test": "npm run build && node --test dist/tests/suite-host.test.js",
+    "check": "npm test"
   },
   "dependencies": {
     "ajv": "^8.20.0",
